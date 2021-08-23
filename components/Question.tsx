@@ -4,10 +4,10 @@ import Enunciate from '../components/Enunciate'
 import Response from  './Response'
 
 const letras = [
-    {valor: 'A', cor: 'orange'},
-    {valor: 'B', cor: 'darkorchid'},
-    {valor: 'C', cor: 'dodgerblue'},
-    {valor: 'D', cor: 'darkgreen'},
+    {valor: 'A', cor: 'rgb(216, 56, 35)'},
+    {valor: 'B', cor: 'rgb(31, 133, 235)'},
+    {valor: 'C', cor: 'rgb(12, 134, 12)'},
+    {valor: 'D', cor: 'rgb(138, 10, 138)'},
 ]
 
 interface QuestionProps {
