@@ -19,7 +19,12 @@ export default function Home() {
     function repostasFornecida(indice: number) {
         setQuestion(question.responderCom(indice))
     }
-
+    
+    function endTime() {
+        if(question.naoRespondida){
+            setQuestion(question.responderCom(-1))
+        }
+    }
     return (
         <div className={styles.container}>
             <Head>  
@@ -28,13 +33,14 @@ export default function Home() {
                 <link rel="icon" href="/questionmark_icon.svg" />
             </Head>
 
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh'
-            }}>
-                <Question valor={question} repostasFornecida={repostasFornecida}></Question>
+            <div className={styles.container}>
+                <Question 
+                    valor={question} 
+                    endTime={endTime} 
+                    repostasFornecida={repostasFornecida}
+                    responseTime={5}
+                />    
+                
             </div>
     </div>
     )

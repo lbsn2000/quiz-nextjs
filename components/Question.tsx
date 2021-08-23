@@ -2,6 +2,7 @@ import QuestionModel from "../model/questionModel"
 import styles from "../styles/Question.module.css"
 import Enunciate from '../components/Enunciate'
 import Response from  './Response'
+import Timer from "./Timer"
 
 const letras = [
     {valor: 'A', cor: 'rgb(216, 56, 35)'},
@@ -13,6 +14,8 @@ const letras = [
 interface QuestionProps {
     valor: QuestionModel
     repostasFornecida: (indice: number) => void
+    endTime: () => void
+    responseTime?: number
 }
 
 export default function Question(props: QuestionProps){
@@ -35,6 +38,7 @@ export default function Question(props: QuestionProps){
     return(
         <div className={styles.question}>
             <Enunciate text={question.enunciado}/>
+            <Timer duration={props.responseTime ?? 10} endTime={props.endTime}/>
             {renderizarRespostas()}
         </div>
     )
