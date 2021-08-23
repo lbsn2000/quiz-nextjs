@@ -29,6 +29,10 @@ export default class ResponseModel{
         return this.#revelada
     }
 
+    revelar(){
+        return new ResponseModel(this.#valor, this.#certa, true)
+    }
+
     paraObjeto(){
         return{
             valor: this.#valor,

@@ -1,3 +1,4 @@
+import { randomSort } from "../functions/randomArray"
 import ResponseModel from "./responseModel"
 
 export default class QuestionModel {
@@ -7,7 +8,7 @@ export default class QuestionModel {
     #acertou: boolean
     //#respondida: boolean
 
-    constructor(id: number, enunciado: string, repostas: any[], acertou= false){
+    constructor(id: number, enunciado: string, repostas: any[], acertou = false){
         this.#id = id
         this.#enunciado = enunciado
         this.#respostas = repostas
@@ -37,12 +38,28 @@ export default class QuestionModel {
         return false
     }
 
+    responderCom(indice: number): QuestionModel{
+        const correta = this.#respostas[indice]?.certa
+        const respostas = this.#respostas.map((resposta, i)=> {
+            const respostaSelecionada = indice === i
+            const deveRevelar = respostaSelecionada || resposta.certa
+            return deveRevelar ? resposta.revelar() : resposta
+        })
+        return new QuestionModel(this.#id, this.#enunciado, respostas, correta)
+    }
+
+    shuffleResponses(): QuestionModel{
+        let sortResponses = randomSort(this.#respostas)
+        return new QuestionModel(this.#id, this.#enunciado, sortResponses, this.#acertou)
+    }
+
     paraObjeto(){
         return{
             id: this.#id,
             enunciado: this.#enunciado,
+            acertou: this.#acertou,
+            respondida: this.respondida,
             respostas: this.#respostas.map(r => r.paraObjeto()),
-            acertou: this.#acertou
     
         }        
     }
