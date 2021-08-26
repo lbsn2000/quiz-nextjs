@@ -1,30 +1,73 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Question from '../components/Question'
 import QuestionModel from '../model/questionModel'
-import ResponseModel from '../model/responseModel'
-import { useState } from 'react'
+import Quiz from '../components/Quiz'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/dist/client/router'
 
-    const questionMold = new QuestionModel(1, 'Qual fruto é conhecido no Norte e Nordeste como "jerimum"?', [
-        ResponseModel.errada('123'),
-        ResponseModel.errada('456'),
-        ResponseModel.errada('789'),
-        ResponseModel.certa('certa')
-    ])
+const BASE_URL = 'http://localhost:3000/api'
 
 export default function Home() {
-    
-    const [question, setQuestion] = useState(questionMold)
 
-    function repostasFornecida(indice: number) {
-        setQuestion(question.responderCom(indice))
-    }
+    const router = useRouter()
     
-    function endTime() {
-        if(question.naoRespondida){
-            setQuestion(question.responderCom(-1))
+    const [question, setQuestion] = useState()
+    const [respostasCertas, setRespostasCertas] = useState()
+    const [questionsIDs, setQuestionsIDs] = useState([])
+
+    async function loadQuestionsIds(){
+        const resp = await fetch(`${BASE_URL}/quizzes`)
+        const Ids = await resp.json()
+        setQuestionsIDs(Ids)
+    }
+
+    async function loadMainQuestions(idQuestion: number){
+        const resp = await fetch(`${BASE_URL}/questions/${idQuestion}`)
+        const objt = await resp.json()
+        const newQuestion = QuestionModel.criarUsandoObjeto(objt)
+        setQuestion(newQuestion)
+    }
+
+    function questionResp(respQuestion: QuestionModel){
+        setQuestion(respQuestion)
+        const acertou = respQuestion.acertou
+        setRespostasCertas(respostasCertas + (acertou ? 1 : 0))
+    }
+
+    function nextIdQuestion(){
+        if(question){
+            const nextIndex = questionsIDs.indexOf(question.id) + 1
+            return questionsIDs[nextIndex]
         }
     }
+
+    function goNext(){
+        const nextID = nextIdQuestion()
+        nextID ? goNextQuestion(nextID) : endQuiz()
+    }
+
+    function goNextQuestion(nextID: number){
+        loadMainQuestions(nextID)
+    }
+
+    function endQuiz(){
+        router.push({
+            pathname: '/result',
+            query:{
+                total: questionsIDs.length,
+                certa: respostasCertas
+            }
+        })
+    }
+
+    useEffect(() => {
+        loadQuestionsIds()
+    },[])
+
+    useEffect(() => {
+        questionsIDs.length > 0 && loadMainQuestions(questionsIDs[0])
+    },[questionsIDs])
+
     return (
         <div className={styles.container}>
             <Head>  
@@ -34,13 +77,12 @@ export default function Home() {
             </Head>
 
             <div className={styles.container}>
-                <Question 
-                    valor={question} 
-                    endTime={endTime} 
-                    repostasFornecida={repostasFornecida}
-                    responseTime={5}
-                />    
-                
+                <Quiz
+                    question={question}
+                    last={nextIdQuestion() === undefined}
+                    questionResp={questionResp}
+                    goNext={goNext}
+                />
             </div>
     </div>
     )

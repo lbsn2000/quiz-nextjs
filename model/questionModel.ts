@@ -6,7 +6,6 @@ export default class QuestionModel {
     #enunciado: string
     #respostas: ResponseModel[]
     #acertou: boolean
-    //#respondida: boolean
 
     constructor(id: number, enunciado: string, repostas: any[], acertou = false){
         this.#id = id
@@ -56,6 +55,11 @@ export default class QuestionModel {
         let sortResponses = randomSort(this.#respostas)
         return new QuestionModel(this.#id, this.#enunciado, sortResponses, this.#acertou)
     }
+
+    static criarUsandoObjeto(obj: QuestionModel): QuestionModel {
+        const respostas = obj.respostas.map(resp => ResponseModel.criarUsandoObjeto(resp))
+        return new QuestionModel(obj.id, obj.enunciado, respostas, obj.acertou)
+    } 
 
     paraObjeto(){
         return{

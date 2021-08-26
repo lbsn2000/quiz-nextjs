@@ -2,6 +2,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import styles from '../styles/Timer.module.css'
 
 interface TimerProps {
+    key: any
     duration: number
     endTime: () => void
 }
@@ -14,9 +15,9 @@ export default function Timer(props: TimerProps){
             duration={props.duration}
             onComplete={props.endTime}
             colors={[
-                ["#15c515", 0.33],
-                ["#d8d81e", 0.33],
-                ["#d61414", 0.33],
+                ["#00ff00", 0.33],
+                ["#ffff00", 0.33],
+                ["#ff0000", 0.33],
             ]}>
                 {({remainingTime}) => remainingTime}
             </CountdownCircleTimer>

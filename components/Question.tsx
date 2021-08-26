@@ -25,7 +25,7 @@ export default function Question(props: QuestionProps){
     function renderizarRespostas(){
         return question.respostas.map((resp,i) => {
             return <Response
-                key={i}
+                key={`${question.id}${i}`}
                 valor={resp}
                 indice={i}
                 letra={letras[i].valor}
@@ -38,7 +38,7 @@ export default function Question(props: QuestionProps){
     return(
         <div className={styles.question}>
             <Enunciate text={question.enunciado}/>
-            <Timer duration={props.responseTime ?? 10} endTime={props.endTime}/>
+            <Timer key={question.id} duration={props.responseTime ?? 10} endTime={props.endTime}/>
             {renderizarRespostas()}
         </div>
     )

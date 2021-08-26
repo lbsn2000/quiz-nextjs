@@ -33,6 +33,10 @@ export default class ResponseModel{
         return new ResponseModel(this.#valor, this.#certa, true)
     }
 
+    static criarUsandoObjeto(obj: ResponseModel): ResponseModel {
+        return new ResponseModel(obj.valor, obj.certa, obj.revelada)
+    }
+
     paraObjeto(){
         return{
             valor: this.#valor,
